@@ -1,4 +1,8 @@
-import hashlib, hashtoascii
+import hashlib, hashtoascii, lukecsv
+import os.path
+
+if os.path.isfile(lukePWM.csv)==False:
+    lukecsv.createcsv(lukePWM.csv)
 
 account='Home Ubuntu'
 datechanged='7/28/2017'
