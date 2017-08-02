@@ -1,8 +1,8 @@
 import hashlib, hashtoascii, lukecsv
 import os.path
 
-if os.path.isfile(lukePWM.csv)==False:
-    lukecsv.createcsv(lukePWM.csv)
+if os.path.isfile('lukePWM.csv')==False:
+    lukecsv.createcsv('lukePWM.csv')
 
 account='Home Ubuntu'
 datechanged='7/28/2017'
@@ -10,18 +10,21 @@ datechanged='7/28/2017'
 
 
 
-def datesum (dateslashdelim):
-    sum=0
-    for char in dateslashdelim:
-        if char != '/':
-            sum+=int(char)
-    return sum
+
 
 def writenewentry():
-    print ('Oops. this is not implemented yet.\n')
+    accountname=input('Please enter the name of the account which you want to create an entry for. \n')
+    if lukecsv.entryexists(accountname)==False:
+        lukecsv.makeentry(accountname)
+    else:
+        print('That account appears to already exist. Please update instead.')
 
 def updateentry():
-    print ('Oops. this is not implemented yet.\n')
+    accountname=input('Please enter the name of the account which you want to create an entry for. \n')
+    if lukecsv.entryexists(accountname)==True:
+        lukecsv.updateentry(accountname)
+    else:
+        print('That account does not appear to exist. Please add a new entry instead.')
 
 def outputpw(accountname):
     reminder='You last changed the password for ' +repr (accountname) + ' on ' + datechanged + '.'
