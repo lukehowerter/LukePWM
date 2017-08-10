@@ -4,8 +4,8 @@ import os.path
 if os.path.isfile('lukePWM.csv')==False:
     lukecsv.createcsv('lukePWM.csv')
 
-account='Home Ubuntu'
-datechanged='7/28/2017'
+
+
 
 
 
@@ -27,12 +27,21 @@ def updateentry():
         print('That account does not appear to exist. Please add a new entry instead.')
 
 def outputpw(accountname):
-    reminder='You last changed the password for ' +repr (accountname) + ' on ' + datechanged + '.'
-    print (reminder)
-    masterpw=input('Enter the master password you used on ' + datechanged + ':\n')
-    accountpw=getpw(masterpw, accountname, datechanged)
-    pwoutput='The password for ' + accountname + " is:\n" + accountpw
-    print(pwoutput)
+    csvinput=[]
+    if lukecsv.entryexists(accountname)==True:
+        csvinput=lukecsv.outputentry(accountname)
+        datechanged=csvinput[1]
+        reminder='You last changed the password for ' +repr (accountname) + ' on ' + datechanged + '.'
+        print (reminder)
+        mpw=input('Enter the master password you used on ' + datechanged + ':\n')
+        if lukecsv.encodempw(mpw,datechanged)==csvinput[2]:
+            accountpw=getpw(mpw, accountname, datechanged)
+            pwoutput='The password for ' + accountname + " is:\n" + accountpw
+            print(pwoutput)
+        else:
+            print('The master password you entered is not the one you entered on '+datechanged)
+    else:
+        print('That account does not appear in the CSV file.')
     
 
 def getpw(mpw, account, date, n=12):
