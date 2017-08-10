@@ -1,4 +1,4 @@
-import csv, fileinput, hashlib
+import csv, fileinput, hashlib, time
 
 def createcsv(filename='lukePWM.csv'):
     with open(filename, 'w', newline='') as f:
@@ -36,7 +36,7 @@ def makeentry(accountname, csvfile='lukePWM.csv'):
             writer = csv.writer(f2)
             writer.writerows(csvcontents)
             writer.writerow(makerow(accountname))
-    message='New entry added for' + repr(accountname) + '.\n'
+    message='New entry added for' + repr(accountname) + '. You may now select it as an entry.\n'
     print(message)
     
 def entryexists(accountname, csvfile='lukePWM.csv'):
@@ -64,12 +64,27 @@ def makerow(accountname):
         mpwverify=input('Please type the password again to verify.\n')
         if mpw==mpwverify:
             verified=True
-    date='08/02/2017'
+    date=time.strftime("%d/%m/%Y")
+    encodedmpw=encodempw(mpw, date)
+    rowtowrite=[accountname, date, encodedmpw]
+    return rowtowrite
+
+def encodempw(mpw, date):
     saltedpw=mpw+ repr(datesum(date))
     saltedpw=saltedpw.encode('utf-8')
     hashedsaltedmpw=hashlib.sha224(saltedpw).hexdigest()
-    rowtowrite=[accountname, date, hashedsaltedmpw]
-    return rowtowrite
+    return hashedsaltedmpw
+    
+
+def outputentry(accountname, csvfile='lukePWM.csv'):
+    with open(csvfile, newline='') as f:
+        reader = csv.reader(f)
+        outputrow=[]
+        for row in reader:
+            if row[0]==accountname:
+                outputrow=row
+        return outputrow
+        
 
 def datesum (dateslashdelim):
     sum=0
